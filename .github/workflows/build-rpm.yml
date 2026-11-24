@@ -1,0 +1,63 @@
+name: Build Rocky Linux 10 RPM
+
+on:
+  push:
+    branches:
+      - master
+    tags:
+      - '*'
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build-rpm:
+    runs-on: ubuntu-latest
+    container: rockylinux:10
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+
+      - name: Install build dependencies
+        run: |
+          dnf -y install \
+            gcc \
+            gzip \
+            make \
+            php-cli \
+            php-devel \
+            php-common \
+            redhat-rpm-config \
+            rpm-build \
+            tar
+
+      - name: Build RPM
+        shell: bash
+        run: |
+          set -euxo pipefail
+
+          version="$(sed -n 's/^Version:[[:space:]]*//p' packaging/rpm/php-radius.spec)"
+          topdir="${PWD}/rpmbuild"
+          mkdir -p "${topdir}"/{BUILD,BUILDROOT,RPMS,SOURCES,SPECS,SRPMS}
+
+          git archive \
+            --format=tar.gz \
+            --prefix="radius-${version}/" \
+            --output="${topdir}/SOURCES/radius-${version}.tar.gz" \
+            HEAD
+          cp packaging/rpm/php-radius.spec "${topdir}/SPECS/"
+
+          rpmbuild -ba \
+            --define "_topdir ${topdir}" \
+            "${topdir}/SPECS/php-radius.spec"
+
+      - name: Upload RPM artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: php-radius-rocky-10-rpm
+          path: |
+            rpmbuild/RPMS/**/*.rpm
+            rpmbuild/SRPMS/*.src.rpm
+          if-no-files-found: error

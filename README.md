@@ -32,6 +32,20 @@ echo extension=radius.so | sudo tee -a $(php --ini | head -1 | cut -d: -f 2- | c
 
 You can also run the test suite with `make test`.
 
+### Rocky Linux 10 RPM
+
+The repository includes an RPM spec and GitHub Actions workflow for Rocky Linux
+10. The workflow builds the extension and uploads the binary and source RPMs as
+the `php-radius-rocky-10-rpm` workflow artifact.
+
+To build locally on Rocky Linux 10, install `php-devel`, `gcc`, `make`, and
+`rpm-build`, place a source archive named
+`radius-1.4.0b2.tar.gz` in your RPM `SOURCES` directory, and run:
+
+```sh
+rpmbuild -ba packaging/rpm/php-radius.spec
+```
+
 ## Usage
 
 [The PHP manual includes a section on this extension.](http://php.net/radius)
