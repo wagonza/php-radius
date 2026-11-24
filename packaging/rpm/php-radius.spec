@@ -1,6 +1,6 @@
 Name:           php-radius
 Version:        1.4.0b2
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        PHP RADIUS client extension
 
 License:        BSD
@@ -44,5 +44,8 @@ php -n -d extension=%{buildroot}%{php_extdir}/radius.so \
 %{php_extdir}/radius.so
 
 %changelog
+* Tue Nov 24 2026 PHP Radius Maintainers <maintainers@example.com> - 1.4.0b2-2
+- Fix compilation with PHP 8.5 after removal of ext/standard/php_rand.h.
+
 * Tue Nov 24 2026 PHP Radius Maintainers <maintainers@example.com> - 1.4.0b2-1
 - Build the PHP RADIUS extension for Rocky Linux 9 with PHP 8.5.

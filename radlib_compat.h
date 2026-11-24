@@ -39,7 +39,9 @@ any other GPL-like (LGPL, GPL2) License.
 #endif
 
 #include "php.h"
+#if PHP_VERSION_ID < 80500
 #include "ext/standard/php_rand.h"
+#endif
 #include "ext/standard/php_standard.h"
 
 #define MPPE_KEY_LEN    16
@@ -47,6 +49,24 @@ any other GPL-like (LGPL, GPL2) License.
 #ifndef HAVE_U_INT32_T
 typedef unsigned int u_int32_t;
 #endif
+
+/* php_rand.h was removed in PHP 8.5. Use the public Zend CSPRNG API there. */
+static inline uint32_t
+radius_random_uint32(void)
+{
+#if PHP_VERSION_ID >= 80500
+	uint32_t value;
+	char error[128];
+
+	if (zend_random_bytes(&value, sizeof(value), error, sizeof(error)) == SUCCESS) {
+		return value;
+	}
+
+	return 0;
+#else
+	return (uint32_t) php_rand();
+#endif
+}
 
 #ifdef PHP_WIN32
 int inet_aton(const char *cp, struct in_addr *inp);
