@@ -35,21 +35,21 @@ You can also run the test suite with `make test`.
 ### Rocky Linux 9 / PHP 8.5 RPM
 
 The repository includes an RPM spec and GitHub Actions workflow for Rocky Linux
-9 with PHP 8.5. The workflow builds the extension and uploads the binary and
-source RPMs as the `php-radius-rocky-9-php85-rpm` workflow artifact.
+9 with Remi’s PHP 8.5 Software Collection. The workflow builds the extension
+and uploads the binary and source RPMs as the
+`php-radius-rocky-9-php85-rpm` workflow artifact.
 
 Before installing the RPM, enable the same Remi PHP module stream on the target
-machine so DNF can resolve the PHP 8.5 runtime dependency:
+machine so DNF can resolve the PHP 8.5 SCL runtime dependency:
 
 ```sh
 sudo dnf install -y https://rpms.remirepo.net/enterprise/remi-release-9.rpm
-sudo dnf module reset php -y
-sudo dnf module enable php:remi-8.5 -y
+sudo dnf install -y php85-php-common
 sudo dnf install -y ./php-radius-1.4.0b2-2.el9.x86_64.rpm
 ```
 
-To build locally on Rocky Linux 9, enable PHP 8.5 from the Remi repository,
-then install `php-devel`, `gcc`, `make`, and
+To build locally on Rocky Linux 9, enable Remi’s PHP 8.5 SCL repository, then
+install `php85-php-devel`, `gcc`, `make`, and
 `rpm-build`, place a source archive named
 `radius-1.4.0b2.tar.gz` in your RPM `SOURCES` directory, and run:
 
