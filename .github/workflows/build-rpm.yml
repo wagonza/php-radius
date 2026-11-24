@@ -42,11 +42,14 @@ jobs:
           topdir="${PWD}/rpmbuild"
           mkdir -p "${topdir}"/{BUILD,BUILDROOT,RPMS,SOURCES,SPECS,SRPMS}
 
-          git archive \
-            --format=tar.gz \
-            --prefix="radius-${version}/" \
-            --output="${topdir}/SOURCES/radius-${version}.tar.gz" \
-            HEAD
+          tar \
+            --create \
+            --gzip \
+            --file="${topdir}/SOURCES/radius-${version}.tar.gz" \
+            --transform="s,^\\.,radius-${version}," \
+            --exclude='./.git' \
+            --exclude='./rpmbuild' \
+            .
           cp packaging/rpm/php-radius.spec "${topdir}/SPECS/"
 
           rpmbuild -ba \
