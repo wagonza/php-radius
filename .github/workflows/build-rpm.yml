@@ -23,17 +23,19 @@ jobs:
       - name: Install build dependencies
         run: |
           dnf -y install https://rpms.remirepo.net/enterprise/remi-release-9.rpm
+          dnf -y module reset php
+          dnf -y module enable php:remi-8.5
           dnf -y install \
             gcc \
             gzip \
             make \
-            php85-php-cli \
-            php85-php-devel \
-            php85-php-common \
+            php-cli \
+            php-devel \
+            php-common \
             redhat-rpm-config \
             rpm-build \
             tar
-          /opt/remi/php85/root/usr/bin/php --version
+          php --version
 
       - name: Build RPM
         shell: bash
