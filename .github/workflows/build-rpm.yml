@@ -1,4 +1,4 @@
-name: Build Rocky Linux 10 RPM
+name: Build Rocky Linux 9 PHP 8.5 RPM
 
 on:
   push:
@@ -15,13 +15,16 @@ permissions:
 jobs:
   build-rpm:
     runs-on: ubuntu-latest
-    container: rockylinux:10
+    container: rockylinux:9
     steps:
       - name: Check out source
         uses: actions/checkout@v4
 
       - name: Install build dependencies
         run: |
+          dnf -y install https://rpms.remirepo.net/enterprise/remi-release-9.rpm
+          dnf -y module reset php
+          dnf -y module enable php:remi-8.5
           dnf -y install \
             gcc \
             gzip \
@@ -32,6 +35,7 @@ jobs:
             redhat-rpm-config \
             rpm-build \
             tar
+          php --version
 
       - name: Build RPM
         shell: bash
@@ -59,7 +63,7 @@ jobs:
       - name: Upload RPM artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: php-radius-rocky-10-rpm
+          name: php-radius-rocky-9-php85-rpm
           path: |
             rpmbuild/RPMS/**/*.rpm
             rpmbuild/SRPMS/*.src.rpm

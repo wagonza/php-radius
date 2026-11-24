@@ -9,9 +9,9 @@ Source0:        radius-%{version}.tar.gz
 
 BuildRequires:  gcc
 BuildRequires:  make
-BuildRequires:  php-devel >= 8.3
+BuildRequires:  php-devel >= 8.5
 BuildRequires:  rpm-build
-Requires:       php-common%{?_isa} >= 8.3
+Requires:       php-common%{?_isa} >= 8.5
 
 %description
 The radius extension provides PHP bindings for RADIUS authentication,
@@ -45,4 +45,4 @@ php -n -d extension=%{buildroot}%{php_extdir}/radius.so \
 
 %changelog
 * Tue Nov 24 2026 PHP Radius Maintainers <maintainers@example.com> - 1.4.0b2-1
-- Build the PHP RADIUS extension for Rocky Linux 10.
+- Build the PHP RADIUS extension for Rocky Linux 9 with PHP 8.5.
